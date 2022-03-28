@@ -16,5 +16,5 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   joinCourse
 );
-router.get("/", getCourses);
+router.get("/", passport.authenticate("jwt", { session: false }), getCourses);
 module.exports = router;
