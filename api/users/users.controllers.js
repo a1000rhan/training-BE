@@ -1,5 +1,6 @@
 const User = require("../../db/models/User");
 const Profile = require("../../db/models/Profile");
+const Course = require("../../db/models/Course");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {
@@ -28,19 +29,23 @@ const generateToken = (user) => {
 
 exports.signup = async (req, res, next) => {
   try {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-    req.body.password = hashedPassword;
-    const newUser = await User.findOneAndUpdate(
-      { staffId: req.body.staffId },
-      { password: req.body.password, type: req.body.type },
-      { new: true }
-    );
-    console.log(newUser);
-    const token = generateToken(newUser);
-    // const profile = await Profile.create({ user: newUser._id });
-    // await newUser.updateOne({ profile: profile._id });
-    res.status(201).json({ token });
+    const user = await User.findOne({ staffId: req.body.staffId });
+    if (!user.password) {
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+      req.body.password = hashedPassword;
+      const newUser = await User.findOneAndUpdate(
+        { staffId: req.body.staffId },
+        { password: req.body.password, type: req.body.type },
+        { new: true }
+      );
+      const token = generateToken(newUser);
+      // const profile = await Profile.create({ user: newUser._id });
+      // await newUser.updateOne({ profile: profile._id });
+      res.status(201).json({ token });
+    } else {
+      res.status(401).json({ Message: "You have signed up before" });
+    }
   } catch (error) {
     next(error);
   }
@@ -50,6 +55,7 @@ exports.signinUser = (req, res, next) => {
   const token = generateToken(req.user);
   res.json({ token });
 };
+
 exports.createUser = async (req, res, next) => {
   try {
     const newUser = await User.create({

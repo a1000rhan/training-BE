@@ -4,7 +4,12 @@ const ProfileSchema = Schema({
   firstName: { type: String, require: true },
   lastName: { type: String },
   image: { type: String },
-  courses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+  courses: [
+    {
+      courseId: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+      profileStatus: "",
+    },
+  ],
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 
   staffId: {

@@ -1,13 +1,11 @@
 const express = require("express");
 const cors = require("cors");
-
 const path = require("path");
 
 // Required Routes
 const userRoutes = require("./api/users/users.routes");
 const courseRoutes = require("./api/courses/courses.routes");
-// const maidRoutes = require("./api/maids/maids.routers");
-// const profileRoutes = require("./api/profiles/profiles.routers");
+const profileRoutes = require("./api/profiles/profiles.routes");
 const connectDB = require("./db/database");
 
 const app = express();
@@ -41,10 +39,10 @@ passport.use(jwtStrategy);
 //middleware hundel Errors
 
 // Routes
-// app.use("/api/maid", maidRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/courses", courseRoutes);
-// app.use("/api/profiles", profileRoutes);
+app.use("/api/profiles", profileRoutes);
+
 //server use
 
 connectDB();

@@ -2,7 +2,7 @@ const { model, Schema, mongoose } = require("mongoose");
 
 const UserSchema = Schema({
   staffId: { type: String, unique: true, required: true },
-  password: { type: String, required: true },
+  password: { type: String, default: null },
   email: {
     type: String,
     match: [

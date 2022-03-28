@@ -8,6 +8,7 @@ const CourseSchema = Schema({
   location: { type: String },
   categories: [{ type: String }],
   maxSeats: { type: Number, default: 50 },
+  status: { type: String, default: "pending" },
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User",
