@@ -1,7 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const {
-  signupUser,
+  signup,
   signinUser,
   forgotPassword,
   resetPassword,
@@ -9,7 +9,7 @@ const {
 } = require("./users.controllers");
 const router = express.Router();
 
-router.put("/", signupUser);
+router.put("/", signup);
 router.post(
   "/signin",
   passport.authenticate("local", { session: false }),
