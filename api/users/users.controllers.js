@@ -1,4 +1,5 @@
 const User = require("../../db/models/User");
+const Profile = require("../../db/models/Profile");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {
@@ -27,7 +28,6 @@ const generateToken = (user) => {
 
 exports.signup = async (req, res, next) => {
   try {
-    req.body.type = "student";
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
     req.body.password = hashedPassword;
@@ -36,6 +36,7 @@ exports.signup = async (req, res, next) => {
       { password: req.body.password, type: req.body.type },
       { new: true }
     );
+    console.log(newUser);
     const token = generateToken(newUser);
     // const profile = await Profile.create({ user: newUser._id });
     // await newUser.updateOne({ profile: profile._id });
@@ -49,7 +50,26 @@ exports.signinUser = (req, res, next) => {
   const token = generateToken(req.user);
   res.json({ token });
 };
-
+exports.createUser = async (req, res, next) => {
+  try {
+    const newUser = await User.create({
+      staffId: req.body.staffId,
+      password: req.body.password,
+      type: req.body.type,
+    });
+    if (req.type !== "admin") {
+      const newProfile = await Profile.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        image: req.body.image,
+        owner: newUser,
+      });
+    }
+    res.status(200).json(newUser);
+  } catch (error) {
+    next(error);
+  }
+};
 exports.forgotPassword = (req, res) => {
   const { email } = req.body;
 
@@ -138,13 +158,5 @@ exports.resetPassword = (req, res) => {
     });
   } else {
     return res.status(401).json({ error: "Authentication Error !" });
-  }
-};
-exports.createUser = async (req, res, next) => {
-  try {
-    const newUser = await User.create(req.body);
-    res.status(200).json(newUser);
-  } catch (error) {
-    next(error);
   }
 };

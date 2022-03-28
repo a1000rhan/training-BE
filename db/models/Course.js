@@ -6,10 +6,18 @@ const CourseSchema = Schema({
   description: { type: String, required: true },
   image: { type: String },
   location: { type: String },
+  categories: [{ type: String }],
+  maxSeats: { type: Number, default: 50 },
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  students: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Profile",
+    },
+  ],
 });
 
 module.exports = model("Course", CourseSchema);
