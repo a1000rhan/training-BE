@@ -5,7 +5,7 @@ const path = require("path");
 
 // Required Routes
 const userRoutes = require("./api/users/users.routes");
-// const bookingRoutes = require("./api/bookings/bookings.routes");
+const courseRoutes = require("./api/courses/courses.routes");
 // const maidRoutes = require("./api/maids/maids.routers");
 // const profileRoutes = require("./api/profiles/profiles.routers");
 const connectDB = require("./db/database");
@@ -43,9 +43,11 @@ passport.use(jwtStrategy);
 // Routes
 // app.use("/api/maid", maidRoutes);
 app.use("/api/user", userRoutes);
-// app.use("/api/bookings", bookingRoutes);
+app.use("/api/courses", courseRoutes);
 // app.use("/api/profiles", profileRoutes);
 //server use
+
+connectDB();
 
 app.listen(8000, () => {
   console.log("The application is running on localhost:8000");

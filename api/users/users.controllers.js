@@ -25,7 +25,7 @@ const generateToken = (user) => {
   return token;
 };
 
-exports.signupUser = async (req, res, next) => {
+exports.signup = async (req, res, next) => {
   try {
     req.body.type = "student";
     const saltRounds = 10;
