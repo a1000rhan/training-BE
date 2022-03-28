@@ -24,29 +24,30 @@ exports.joinCourse = async (req, res, next) => {
   try {
     const { courseId } = req.params;
     const course = await Course.findOne({ _id: courseId });
-    if (course.maxSeats > 0) {
-      if (!course.students.some((student) => student.owner === req.user._id)) {
-        res.status(404).json({ message: "You are already in this course" });
-      }
-      const profile = await Profile.findOneAndUpdate(
-        { owner: req.user },
-        { $push: { courses: course } },
-        { new: true, runValidators: true }
-      );
-      console.log(
-        "🚀 ~ file: courses.controllers.js ~ line 42 ~ exports.joinCourse= ~ profile",
-        profile
-      );
-      const updatedCourse = await Course.findOneAndUpdate(
-        { _id: courseId },
-        {
-          maxSeats: course.maxSeats - 1,
-          $push: { students: profile._id },
-        },
+    const foundProfile = await Profile.findOne({ owner: req.user._id });
+    const foundUserInCourse = course.students.some((student) =>
+      student.equals(foundProfile._id)
+    );
+    if (!foundUserInCourse) {
+      if (course.maxSeats > 0) {
+        const profile = await Profile.findOneAndUpdate(
+          { owner: req.user },
+          { $push: { courses: course } },
+          { new: true, runValidators: true }
+        );
+        const updatedCourse = await Course.findOneAndUpdate(
+          { _id: courseId },
+          {
+            maxSeats: course.maxSeats - 1,
+            $push: { students: profile._id },
+          },
 
-        { new: true, runValidators: true }
-      );
-      res.status(200).json(updatedCourse);
+          { new: true, runValidators: true }
+        );
+        res.status(200).json(updatedCourse);
+      }
+    } else {
+      res.status(200).json({ message: "you are already in this course" });
     }
   } catch (error) {
     next(error);
