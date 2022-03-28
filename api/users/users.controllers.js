@@ -1,4 +1,5 @@
 const User = require("../../db/models/User");
+const Profile = require("../../db/models/Profile");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {
@@ -142,7 +143,19 @@ exports.resetPassword = (req, res) => {
 };
 exports.createUser = async (req, res, next) => {
   try {
-    const newUser = await User.create(req.body);
+    const newUser = await User.create({
+      staffId: req.body.staffId,
+      password: req.body.password,
+      type: req.body.type,
+    });
+    if (req.type !== "admin") {
+      const newProfile = await Profile.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        image: req.body.image,
+        owner: newUser,
+      });
+    }
     res.status(200).json(newUser);
   } catch (error) {
     next(error);
