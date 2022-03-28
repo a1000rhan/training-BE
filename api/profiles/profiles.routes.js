@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
-const {} = require("./users.controllers");
+const { fetchProfile } = require("./profiles.controllers");
 const router = express.Router();
+router.get("/", passport.authenticate("jwt", { session: false }), fetchProfile);
 
 module.exports = router;
