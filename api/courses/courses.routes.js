@@ -26,7 +26,7 @@ router.delete(
 );
 router.put(
   "/:profileId",
-  pas - sport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   approveCourse
 );
 module.exports = router;
