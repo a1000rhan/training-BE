@@ -4,6 +4,8 @@ const {
   createCourse,
   getCourses,
   joinCourse,
+  deleteCourse,
+  approveCourse,
 } = require("./courses.controllers");
 const router = express.Router();
 router.post(
@@ -17,4 +19,14 @@ router.post(
   joinCourse
 );
 router.get("/", passport.authenticate("jwt", { session: false }), getCourses);
+router.delete(
+  "/:courseId",
+  passport.authenticate("jwt", { session: false }),
+  deleteCourse
+);
+router.put(
+  "/:profileId",
+  pas - sport.authenticate("jwt", { session: false }),
+  approveCourse
+);
 module.exports = router;

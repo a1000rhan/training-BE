@@ -32,7 +32,9 @@ exports.joinCourse = async (req, res, next) => {
       if (course.maxSeats > 0) {
         const profile = await Profile.findOneAndUpdate(
           { owner: req.user },
-          { $push: { courses: course } },
+          {
+            $push: { courses: { courseId: course, profileStatus: "pending" } },
+          },
           { new: true, runValidators: true }
         );
         const updatedCourse = await Course.findOneAndUpdate(
@@ -48,6 +50,57 @@ exports.joinCourse = async (req, res, next) => {
       }
     } else {
       res.status(200).json({ message: "you are already in this course" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+exports.approveCourse = async (req, res, next) => {
+  try {
+    if (req.user.type === "admin") {
+      const { profileId } = req.params;
+      const profile = await Profile.findById(profileId);
+      const foundCourse = profile.courses.find((course) =>
+        course.courseId.equals(req.body.course)
+      );
+      console.log(
+        "🚀 ~ file: courses.controllers.js ~ line 66 ~ exports.approveCourse= ~ foundCourse",
+        foundCourse
+      );
+      if (foundCourse) {
+        foundCourse.profileStatus = "approved";
+        console.log(
+          "🚀 ~ file: courses.controllers.js ~ line 66 ~ exports.approveCourse= ~ foundCourse",
+          foundCourse
+        );
+      }
+      const approveCourse = profile.courses.map((course) =>
+        course.courseId.equals(req.body.course) ? foundCourse : course
+      );
+      console.log(
+        "🚀 ~ file: courses.controllers.js ~ line 80 ~ exports.approveCourse= ~ approveCourse",
+        approveCourse
+      );
+      const updatedProfile = await Profile.findByIdAndUpdate(
+        profileId,
+        { courses: approveCourse },
+        { new: true }
+      );
+
+      // await Course.findByIdAndUpdate(req.body.course);
+      res.status(200).json(updatedProfile);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+exports.deleteCourse = async (req, res, next) => {
+  try {
+    const { courseId } = req.params;
+    if (req.user.type === "admin") {
+      const course = await Course.findByIdAndDelete(courseId);
+
+      res.status(200).end();
     }
   } catch (error) {
     next(error);
