@@ -8,7 +8,7 @@ const userRoutes = require("./api/users/users.routes");
 const courseRoutes = require("./api/courses/courses.routes");
 // const maidRoutes = require("./api/maids/maids.routers");
 // const profileRoutes = require("./api/profiles/profiles.routers");
-const connectDB = require("./db/datebase");
+const connectDB = require("./db/database");
 
 const app = express();
 //middleware
