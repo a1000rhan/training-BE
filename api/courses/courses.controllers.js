@@ -2,7 +2,9 @@ const Course = require("../../db/models/Course");
 const Profile = require("../../db/models/Profile");
 exports.getCourses = async (req, res, next) => {
   try {
-    const courses = await Course.find().populate("owner", "staffId _id");
+    const courses = await Course.find()
+      .populate("owner", "staffId _id")
+      .populate("students");
     res.status(200).json(courses);
   } catch (error) {
     next(error);

@@ -9,3 +9,15 @@ exports.fetchProfile = async (req, res, next) => {
     next(error);
   }
 };
+exports.fetchProfiles = async (req, res, next) => {
+  try {
+    if (req.user.type === "admin") {
+      const profiles = await Profile.find()
+        .where("courses.profileStatus")
+        .equals("pending");
+      res.status(200).json(profiles);
+    } else res.status(401).json({ message: "You are not authorized" });
+  } catch (error) {
+    next(error);
+  }
+};
