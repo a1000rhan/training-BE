@@ -17,6 +17,7 @@
     "mailgun": "^0.5.0",
     "mailgun-js": "^0.22.0",
     "mongoose": "^6.2.8",
+    "multer": "^1.4.4",
     "nodemon": "^2.0.15",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",

@@ -12,6 +12,7 @@ const app = express();
 //middleware
 
 app.use(express.json());
+app.use("/media", express.static(path.join(__dirname, "media")));
 
 //return all trips
 

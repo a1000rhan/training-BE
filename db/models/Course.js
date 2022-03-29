@@ -7,6 +7,7 @@ const CourseSchema = Schema({
   description: { type: String, required: true },
   image: { type: String },
   location: { type: String },
+  skills: [{ type: String }],
   categories: [{ type: String }],
   maxSeats: { type: Number, default: 50 },
   status: { type: String, default: "pending" },

@@ -11,6 +11,9 @@ exports.getCourses = async (req, res, next) => {
 exports.createCourse = async (req, res, next) => {
   try {
     console.log(req.user);
+    if (req.file) {
+      req.body.image = `/${req.file.path}`;
+    }
     if (req.user.type === "admin") {
       req.body.owner = req.user._id;
       const newCourse = await Course.create(req.body);
