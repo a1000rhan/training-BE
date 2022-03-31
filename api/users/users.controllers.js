@@ -58,17 +58,12 @@ exports.signinUser = (req, res, next) => {
 
 exports.createUser = async (req, res, next) => {
   try {
-    const newUser = await User.create({
-      staffId: req.body.staffId,
-      password: req.body.password,
-      type: req.body.type,
-    });
-    if (req.type !== "admin") {
+    const newUser = await User.create(req.body);
+    if (newUser.type === "student") {
       const newProfile = await Profile.create({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        image: req.body.image,
-        owner: newUser,
+        owner: newUser._id,
       });
     }
     res.status(200).json(newUser);

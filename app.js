@@ -6,6 +6,7 @@ const path = require("path");
 const userRoutes = require("./api/users/users.routes");
 const courseRoutes = require("./api/courses/courses.routes");
 const profileRoutes = require("./api/profiles/profiles.routes");
+const requestRoutes = require("./api/requests/requests.routes");
 const connectDB = require("./db/database");
 
 const app = express();
@@ -43,6 +44,7 @@ passport.use(jwtStrategy);
 app.use("/api/user", userRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/profiles", profileRoutes);
+app.use("/api/requests", requestRoutes);
 
 //server use
 
