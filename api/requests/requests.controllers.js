@@ -15,30 +15,34 @@ exports.fetchRequests = async (req, res, next) => {
     next(error);
   }
 };
-// if (req.user.type === "admin") {
-//     const requests = await Request.find({ $concatArrays: ["students"] })
-//       .where("courses.profileStatus")
-//       .equals("pending")
-//       .populate("courses.courseId");
 exports.approveCourse = async (req, res, next) => {
   try {
     const { reqId } = req.params;
-    const request = await Request.findByIdAndUpdate(
-      { _id: reqId },
-      { status: "approved" }
-    );
+    if (req.user.type === "admin") {
+      const checkReq = await Request.findById(reqId);
+      console.log(checkReq);
+      if (checkReq.status === "pending") {
+        const request = await Request.findByIdAndUpdate(
+          { _id: reqId },
+          { status: "approved" }
+        );
 
-    const updatedProfile = await Profile.findOneAndUpdate(
-      { owner: request.user },
-      { $push: { courses: req.body.course } },
-      { new: true, runValidators: true }
-    );
-    const updatedCourse = await Course.findByIdAndUpdate(
-      { _id: request.course },
-      { maxSeats: updatedProfile._id },
-      { new: true, runValidators: true }
-    );
-    res.status(200).json(updatedProfile);
+        const updatedProfile = await Profile.findOneAndUpdate(
+          { owner: request.user },
+          { $push: { courses: request.course } },
+          { new: true, runValidators: true }
+        );
+        const updatedCourse = await Course.findByIdAndUpdate(
+          { _id: request.course },
+          { $inc: { maxSeats: -1 } },
+          { new: true, runValidators: true }
+        );
+        res.status(200).json(updatedProfile);
+      } else
+        res
+          .status(404)
+          .json({ message: "There is no request that is pending" });
+    } else res.status(401).json({ message: "You are not authorized" });
   } catch (error) {
     next(error);
   }
