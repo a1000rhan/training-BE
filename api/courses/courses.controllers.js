@@ -14,6 +14,10 @@ exports.createCourse = async (req, res, next) => {
     if (req.file) {
       req.body.image = `/${req.file.path}`;
     }
+    console.log(
+      "🚀 ~ file: courses.controllers.js ~ line 15 ~ exports.createCourse= ~ req.file",
+      req.body
+    );
     if (req.user.type === "admin") {
       req.body.owner = req.user._id;
       const newCourse = await Course.create(req.body);
