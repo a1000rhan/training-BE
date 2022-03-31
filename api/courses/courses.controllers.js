@@ -47,7 +47,7 @@ exports.joinCourse = async (req, res, next) => {
           course: course._id,
           user: req.user._id,
         });
-        res.status(200).json({ message: "you have created a request" });
+        res.status(200).json(request);
       }
       // const profile = await Profile.findOneAndUpdate(
       //   { owner: req.user },

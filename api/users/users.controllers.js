@@ -1,6 +1,5 @@
 const User = require("../../db/models/User");
 const Profile = require("../../db/models/Profile");
-const Course = require("../../db/models/Course");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {
@@ -40,8 +39,6 @@ exports.signup = async (req, res, next) => {
         { new: true }
       );
       const token = generateToken(newUser);
-      // const profile = await Profile.create({ user: newUser._id });
-      // await newUser.updateOne({ profile: profile._id });
       res.status(201).json({ token });
     } else {
       res.status(401).json({ Message: "You have signed up before" });
@@ -90,17 +87,17 @@ exports.forgotPassword = (req, res) => {
       to: email,
       subject: "Reset Password Link",
       html: `<h2>Please copy your token then click on the below link to reset your password !</h2>
-      <h2>Your Token: ${token}</h2>
+      <h2>Your Click the following link to reset Password: ${token}</h2>
     
         <a href="exp://192.168.9.172:19000/--/hh://reset">
           Click Here To Reset!
         </a>
       `,
     };
-    console.log(
-      "🚀 ~ file: users.controller.js ~ line 67 ~ User.findOne ~ ${token}",
-      { token }
-    );
+    // console.log(
+    //   "🚀 ~ file: users.controller.js ~ line 67 ~ User.findOne ~ ${token}",
+    //   { token }
+    // );
 
     return user.updateOne({ resetLink: token }, function (error, success) {
       if (error) {

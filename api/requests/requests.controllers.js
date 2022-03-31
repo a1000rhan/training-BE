@@ -20,7 +20,6 @@ exports.approveCourse = async (req, res, next) => {
     const { reqId } = req.params;
     if (req.user.type === "admin") {
       const checkReq = await Request.findById(reqId);
-      console.log(checkReq);
       if (checkReq.status === "pending") {
         const request = await Request.findByIdAndUpdate(
           { _id: reqId },
@@ -37,12 +36,25 @@ exports.approveCourse = async (req, res, next) => {
           { $inc: { maxSeats: -1 } },
           { new: true, runValidators: true }
         );
-        res.status(200).json(updatedProfile);
-      } else
-        res
-          .status(404)
-          .json({ message: "There is no request that is pending" });
+        res.status(200).json(updatedCourse);
+      } else res.status(404).json({ message: "This request is not pending" });
     } else res.status(401).json({ message: "You are not authorized" });
+  } catch (error) {
+    next(error);
+  }
+};
+exports.rejectRequest = async (req, res, next) => {
+  try {
+    const { reqId } = req.params;
+    const requestCheck = await Request.findById(reqId);
+    if (requestCheck.status !== "Rejected") {
+      const request = await Request.findByIdAndUpdate(
+        { _id: reqId },
+        { status: "Rejected" },
+        { new: true, runValidators: true }
+      );
+      res.status(200).json(request);
+    } else res.status(404).json({ message: "The request is already rejected" });
   } catch (error) {
     next(error);
   }
