@@ -15,6 +15,18 @@ exports.fetchRequests = async (req, res, next) => {
     next(error);
   }
 };
+exports.fetchAllRequests = async (req, res, next) => {
+  try {
+    if (req.user.type === "admin") {
+      const requests = await Request.find()
+        .populate("user", "_id staffId")
+        .populate("course", "time date title");
+      res.status(200).json(requests);
+    } else res.status(401).json({ message: "You are not authorized" });
+  } catch (error) {
+    next(error);
+  }
+};
 exports.approveCourse = async (req, res, next) => {
   try {
     const { reqId } = req.params;

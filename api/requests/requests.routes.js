@@ -4,12 +4,18 @@ const {
   fetchRequests,
   approveCourse,
   rejectRequest,
+  fetchAllRequests,
 } = require("./requests.controllers");
 const router = express.Router();
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   fetchRequests
+);
+router.get(
+  "/all",
+  passport.authenticate("jwt", { session: false }),
+  fetchAllRequests
 );
 router.post(
   "/:reqId",
