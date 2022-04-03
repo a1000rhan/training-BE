@@ -2,6 +2,7 @@ const { model, Schema, mongoose } = require("mongoose");
 
 const CourseSchema = Schema({
   date: { type: String },
+  time: { type: String },
   title: { type: String, required: true },
   description: { type: String, required: true },
   image: { type: String },
