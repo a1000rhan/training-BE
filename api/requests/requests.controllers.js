@@ -35,7 +35,12 @@ exports.approveCourse = async (req, res, next) => {
       if (checkReq.status === "pending") {
         const request = await Request.findByIdAndUpdate(
           { _id: reqId },
-          { status: "approved" }
+          { status: "approved" },
+          { new: true }
+        );
+        console.log(
+          "🚀 ~ file: requests.controllers.js ~ line 40 ~ exports.approveCourse= ~ request",
+          request
         );
 
         const updatedProfile = await Profile.findOneAndUpdate(
@@ -50,7 +55,7 @@ exports.approveCourse = async (req, res, next) => {
           { new: true, runValidators: true }
         );
 
-        res.status(200).json(updatedCourse);
+        res.status(200).json(request);
       } else res.status(404).json({ message: "This request is not pending" });
     } else res.status(401).json({ message: "You are not authorized" });
   } catch (error) {
