@@ -43,11 +43,13 @@ exports.approveCourse = async (req, res, next) => {
           { $push: { courses: request.course } },
           { new: true, runValidators: true }
         );
+
         const updatedCourse = await Course.findByIdAndUpdate(
           { _id: request.course },
-          { $inc: { maxSeats: -1 } },
+          { $inc: { maxSeats: -1 }, $push: { students: updatedProfile._id } },
           { new: true, runValidators: true }
         );
+
         res.status(200).json(updatedCourse);
       } else res.status(404).json({ message: "This request is not pending" });
     } else res.status(401).json({ message: "You are not authorized" });
