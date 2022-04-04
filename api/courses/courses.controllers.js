@@ -86,3 +86,18 @@ exports.deleteCourse = async (req, res, next) => {
     next(error);
   }
 };
+exports.updateCourse = async (req, res, next) => {
+  try {
+    const { courseId } = req.params;
+    if (req.file) {
+      req.body.image = `/${req.file.path}`;
+    }
+    if (req.user.type === "admin") {
+      const updatedCourse = await Course.findByIdAndUpdate(courseId, req.body);
+      res.status(200).json(updatedCourse);
+    }
+    res.status(404).json({ message: "You are not an admin" });
+  } catch (error) {
+    next(error);
+  }
+};
