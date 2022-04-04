@@ -93,7 +93,9 @@ exports.updateCourse = async (req, res, next) => {
       req.body.image = `/${req.file.path}`;
     }
     if (req.user.type === "admin") {
-      const updatedCourse = await Course.findByIdAndUpdate(courseId, req.body);
+      const updatedCourse = await Course.findByIdAndUpdate(courseId, req.body, {
+        new: true,
+      });
       res.status(200).json(updatedCourse);
     }
     res.status(404).json({ message: "You are not an admin" });
