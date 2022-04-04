@@ -7,6 +7,7 @@ const {
   getCourses,
   joinCourse,
   deleteCourse,
+  updateCourse,
 } = require("./courses.controllers");
 const router = express.Router();
 router.post(
@@ -25,6 +26,11 @@ router.delete(
   "/:courseId",
   passport.authenticate("jwt", { session: false }),
   deleteCourse
+);
+router.put(
+  "/:courseId",
+  passport.authenticate("jwt", { session: false }),
+  updateCourse
 );
 // router.put(
 //   "/:profileId",
